@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "local-chat"
+name = "local-ai"
 version = "0.1.0"
 description = ""
 authors = ["Eric <ezhang91@yahoo.com>"]

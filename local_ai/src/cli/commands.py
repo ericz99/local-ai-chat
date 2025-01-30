@@ -27,7 +27,7 @@ def chat(
 @handle_errors
 def model(
     action: str = typer.Argument(..., help="list/pull/delete"),
-    name: Optional[str] = typer.Argument(None)  # Make optional
+    name: Optional[str] = None
 ):
     """Manage local LLM models"""
     mm = ModelManager()

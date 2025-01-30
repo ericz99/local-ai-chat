@@ -40,28 +40,10 @@ chmod +x setup_env.sh
 ./scripts/setup_env.sh
 ```
 
-## Usage
-
-```bash
-# Start chat session
-local_mm_chat chat
-
-# Chat with image
-local_mm_chat chat --image path/to/image.png
-
-# Chat with document
-local_mm_chat chat --doc path/to/document.pdf
-
-# Manage models
-local_mm_chat model list
-local_mm_chat model pull mistral:7b
-local_mm_chat model delete llama2:13b
-```
-
 ## Configuration
 
 ```bash
-# dat/config/settings.yaml
+# data/config/settings.yaml
 
 model:
   default: "llava:latest"

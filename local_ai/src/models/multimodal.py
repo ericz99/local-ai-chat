@@ -7,7 +7,7 @@ class MultiModalProcessor:
         self.processors = {
             'image': self.process_image,
             'pdf': self.process_pdf,
-            'audio': self.process_audio
+            # 'audio': self.process_audio
         }
         
     def process_file(self, file_path: Path) -> Dict[str, Any]:

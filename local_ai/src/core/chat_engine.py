@@ -1,22 +1,24 @@
 from pathlib import Path
-from typing import Generator, Optional
+from typing import Generator
 import ollama
 from ..utils.data_privacy import DataEncryptor
 from ..models.multimodal import MultiModalProcessor
+from ..utils.config_loader import load_config
 import json
 import time
 
 class ChatEngine:
-    def __init__(self, model_name="llava:latest", temperature=0.7, gpu_layers=20):
-        self.model_name = model_name
-        self.temperature = temperature
-        self.gpu_layers = gpu_layers
+    def __init__(self):
+        self.config = load_config()
+        self.model_name = self.config['model']['default']
+        self.temperature = self.config['model']['temperature']
+        self.gpu_layers = self.config['model']['gpu_layers']
+        self.max_history = self.config['model']['max_history']
+
         self.history = []
+        self.attachments = []
         self.encryptor = DataEncryptor()
         self.multimodal = MultiModalProcessor()
-        
-        ollama.show_os_logs = False
-        ollama.set_gpu_layers(gpu_layers)
 
     def generate_response(self, prompt: str) -> Generator:
         messages = self._prepare_messages(prompt)
@@ -26,15 +28,33 @@ class ChatEngine:
             stream=True,
             options={
                 'temperature': self.temperature,
-                'num_ctx': 4096
+                'num_ctx': self.config['model']['max_context']
             }
         )
 
     def _prepare_messages(self, prompt: str):
-        return [
-            *self.history,
-            {"role": "user", "content": prompt, "images": self._process_attachments()}
+        """Prepare message history with context window management"""
+        messages = [
+            *self.history[-self.max_history:],
+            {
+                "role": "user", 
+                "content": prompt,
+                "images": [self.multimodal.process_image(img) for img in self.attachments]
+            }
         ]
+
+        return messages
+
+    def add_to_history(self, prompt: str, response: str):
+        """Manage conversation history with context window limits"""
+        self.history.extend([
+            {"role": "user", "content": prompt},
+            {"role": "assistant", "content": response}
+        ])
+        
+        # Truncate history to maintain context window
+        if len(self.history) > self.max_history * 2:
+            self.history = self.history[-(self.max_history * 2):]
 
     def _process_attachments(self):
         return [self.multimodal.process_image(img) for img in self.attachments]
@@ -43,15 +63,10 @@ class ChatEngine:
         self.attachments.append(image_path)
 
     def save_session(self):
-        encrypted = self.encryptor.encrypt_data(json.dumps(self.history))
+        """Save encrypted conversation history"""
+        encrypted = self.encryptor.encrypt_data(json.dumps({
+            'history': self.history,
+            'config': self.config
+        }))
         session_file = Path(f"data/conversations/{int(time.time())}.enc")
         session_file.write_bytes(encrypted)
-
-    def add_to_history(self, prompt: str, response: str):
-        self.history.extend([
-            {"role": "user", "content": prompt},
-            {"role": "assistant", "content": response}
-        ])
-        
-        if len(self.history) > self.config['max_history']:
-            self.history = self.history[-self.config['max_history']:]

@@ -4,18 +4,21 @@ from typing import Dict, Any
 
 DEFAULT_CONFIG = {
     'model': {
-        'default': 'llava:latest',
+        'default': 'llama3.2:latest',
         'gpu_layers': 20,
-        'max_context': 4096
+        'max_context': 4096,
+        'max_history': 6,
+        'temperature': 0.7
     },
     'privacy': {
         'encrypt_history': True
     },
     'ui': {
         'theme': 'dark',
-        'response_color': 'cyan',
+        'response_color': 'magenta',
         'prompt_symbol': '➤',
-        'show_thinking': True
+        'show_thinking': True,
+        'assistant_prefix_color': "bold cyan"
     }
 }
 

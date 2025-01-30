@@ -19,7 +19,7 @@ class ModelManager:
         table.add_column("Digest", style="green")
         
         for model in local_models:
-            table.add_row(model['name'], 
+            table.add_row(model['model'], 
                          f"{model['size']/1e9:.1f} GB",
                          model['digest'][:12])
         
