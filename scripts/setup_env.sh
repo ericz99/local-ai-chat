@@ -11,7 +11,6 @@ cat << EOF > local_ai/data/config/settings.yaml
 model:
   default: "llama3.2:latest"
   temperature: 0.7
-  gpu_layers: 20
   max_context: 4096
   max_history: 6
 

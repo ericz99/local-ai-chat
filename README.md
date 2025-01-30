@@ -25,19 +25,17 @@ A privacy-focused, locally-run chat interface supporting multi-modal interaction
 git clone https://github.com/ericz99/local-ai-chat.git
 cd local-ai-chat
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# venv\Scripts\activate  # Windows
+# Using Poetry
+poetry shell
 
-# Install dependencies
-pip install -e .
+# Install packages
+poetry install
 
-# Make script executable
-chmod +x setup_env.sh
+# Run setup_env
+sh scripts/setup_env.sh
 
-# Run setup
-./scripts/setup_env.sh
+# Run CLI
+poetry run python main.py chat
 ```
 
 ## Configuration

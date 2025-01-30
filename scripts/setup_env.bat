@@ -9,7 +9,6 @@ mkdir local_ai\data\config
 echo model:
 echo   default: "llama3.2:latest"
 echo   temperature: 0.7
-echo   gpu_layers: 20
 echo   max_context: 4096
 echo   max_history: 6
 echo 

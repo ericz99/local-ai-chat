@@ -28,7 +28,7 @@ class MultiModalProcessor:
             raise ValueError(f"Unsupported file type: {ext}")
 
     def process_image(self, image_path: Path) -> dict:
-        """Process image files for LLaVA"""
+        """Process image files for Chat Model"""
         with open(image_path, "rb") as img_file:
             return {
                 "type": "image",

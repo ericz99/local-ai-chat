@@ -1,5 +1,4 @@
 import typer
-from rich import print
 from pathlib import Path
 from typing import Optional
 from ..cli.interface import ChatInterface
@@ -13,14 +12,11 @@ app = typer.Typer()
 def chat(
     image: Optional[Path] = typer.Option(None, "--image", help="Attach image file"),
     doc: Optional[Path] = typer.Option(None, "--doc", help="Attach document"),
-    temp: float = typer.Option(0.7, min=0, max=1),
-    model: str = typer.Option("", help="Override default model")
 ):
     """Start a new chat session"""
     ChatInterface(
         image_path=image,
         document_path=doc,
-        temp=temp
     ).run()
 
 @app.command()

@@ -1,35 +1,48 @@
-import time
-from typing import Generator
 from rich.live import Live
-from rich.spinner import Spinner
 from rich.console import Console
+from rich.text import Text
+from ..utils.config_loader import load_config
 
 class StreamHandler:
     def __init__(self):
+        self.config = load_config()
         self.console = Console()
-        self.spinner = Spinner("dots", style="status.spinner")
-        self.response = None
-        
-    def stream_response(self, response: Generator) -> str:
+        self.ui_config = self.config.get('ui', {})
+
+        self.show_thinking = self.ui_config.get('show_thinking', True)
+        self.response_color = self.ui_config.get('response_color', 'cyan')
+        self.thinking_style = self.ui_config.get('thinking_style', 'yellow')
+        self.assistant_prefix_color = self.ui_config.get('assistant_prefix_color', 'bold cyan')
+
+    def _display_response(self, response_stream): 
         full_response = []
-        with Live(self.spinner, refresh_per_second=20) as live:
-            start_time = time.time()
-            try:
-                for chunk in response:
+        response_display = Text("")
+
+        if self.show_thinking:
+            with Live(response_display, refresh_per_second=25, console=self.console) as live:
+                # Show initial thinking indicator
+                live.update(Text("[ASSISTANT]: Thinking...", style="yellow italic"))
+                
+                # Stream the actual response
+                for chunk in response_stream:
                     token = chunk['message']['content']
                     full_response.append(token)
-                    live.update(f"[cyan]{''.join(full_response)}[/cyan]")
                     
-                    # Update spinner speed based on response rate
-                    if time.time() - start_time > 1:
-                        self.spinner.speed = 0.5
-            except Exception as e:
-                self.console.print(f"[red]Stream Error: {str(e)}[/red]")
-                
-        return ''.join(full_response)
+                    # Build the updating response line
+                    response_text = Text()
+                    response_text.append("[ASSISTANT]: ", style=self.assistant_prefix_color)
+                    response_text.append("".join(full_response))
+                    
+                    live.update(response_text)
 
-    def display_progress(self, progress_type: str):
-        """Show download/processing progress"""
-        with self.console.status(f"[bold green]{progress_type}...") as status:
-            while not self.complete:
-                time.sleep(0.1)
+        else:
+            for chunk in response_stream:
+                token = chunk['message']['content']
+                full_response.append(token)
+                self.console.print(
+                    f"[{self.response_color}]{token}[/{self.response_color}]",
+                    end=""
+                )
+        
+        return ''.join(full_response)
+    

@@ -12,7 +12,6 @@ class ChatEngine:
         self.config = load_config()
         self.model_name = self.config['model']['default']
         self.temperature = self.config['model']['temperature']
-        self.gpu_layers = self.config['model']['gpu_layers']
         self.max_history = self.config['model']['max_history']
 
         self.history = []
@@ -68,5 +67,5 @@ class ChatEngine:
             'history': self.history,
             'config': self.config
         }))
-        session_file = Path(f"data/conversations/{int(time.time())}.enc")
+        session_file = Path(f"data/conversations/encrypted_chats/{int(time.time())}.enc")
         session_file.write_bytes(encrypted)

@@ -5,7 +5,6 @@ from typing import Dict, Any
 DEFAULT_CONFIG = {
     'model': {
         'default': 'llama3.2:latest',
-        'gpu_layers': 20,
         'max_context': 4096,
         'max_history': 6,
         'temperature': 0.7
