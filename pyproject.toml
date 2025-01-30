@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "local-chat"
+version = "0.1.0"
+description = ""
+authors = ["Eric <ezhang91@yahoo.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+typer = {extras = ["all"], version = "^0.15.1"}
+rich = "^13.9.4"
+ollama = "^0.4.7"
+python-dotenv = "^1.0.1"
+cryptography = "^44.0.0"
+pyyaml = "^6.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
