@@ -1,6 +1,8 @@
-# Local Multi-Modal Chat CLI (LMCC)
+# Local Multi-Modal AI Chat
 
 A privacy-focused, locally-run chat interface supporting multi-modal interactions with AI models. Built with Python and Ollama.
+
+![Demo](https://www.loom.com/share/9407da8069134891b6a04be8dc8882e1)
 
 ## Features
 
